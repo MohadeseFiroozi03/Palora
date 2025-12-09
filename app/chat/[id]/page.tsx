@@ -26,7 +26,6 @@
 //   );
 // }
 
-
 import ChatClient from "@/components/chat-client"
 
 type ChatPageProps = {
