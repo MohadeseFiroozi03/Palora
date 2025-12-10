@@ -1,4 +1,5 @@
 "use client"
+
 import type React from "react"
 import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
@@ -62,8 +63,8 @@ interface UiMessage {
 interface CompanionData {
   name: string
   avatar: string
-  description?: string
-  interests?: string
+  description?: string | null
+  interests?: string | null
 }
 
 interface ChatClientProps {
@@ -72,6 +73,7 @@ interface ChatClientProps {
 
 export default function ChatClient({ companionId }: ChatClientProps) {
   console.log("ChatClient companionId:", companionId)
+
   const router = useRouter()
   const { user, loading: authLoading } = useSupabaseAuth()
   const userId = user?.id ?? null
@@ -104,6 +106,7 @@ export default function ChatClient({ companionId }: ChatClientProps) {
   useEffect(() => {
     const textarea = textareaRef.current
     if (!textarea) return
+
     textarea.style.height = "auto"
     const scrollHeight = textarea.scrollHeight
     const maxHeight = 96 // ~4 lines
@@ -117,6 +120,7 @@ export default function ChatClient({ companionId }: ChatClientProps) {
   const checkIfNearBottom = () => {
     const container = messagesContainerRef.current
     if (!container) return true
+
     const threshold = 100
     const position = container.scrollTop + container.clientHeight
     const bottom = container.scrollHeight
@@ -198,6 +202,7 @@ export default function ChatClient({ companionId }: ChatClientProps) {
           content: m.text,
           createdAt: m.created_at, // برای ساعت
         }))
+
         setMessages(uiMessages)
       } catch (err: any) {
         console.error(err)
@@ -219,12 +224,14 @@ export default function ChatClient({ companionId }: ChatClientProps) {
 
   const insertMessage = async (sender: Role, text: string) => {
     if (!userId) throw new Error("No user id")
+
     console.log("Inserting message with:", {
       userId,
       companionId,
       sender,
       text,
     })
+
     const { data: sessionData } = await supabase.auth.getSession()
     console.log("Current session in insertMessage:", sessionData)
 
@@ -250,29 +257,36 @@ export default function ChatClient({ companionId }: ChatClientProps) {
       content: created.text,
       createdAt: created.created_at, // برای ساعت
     }
+
     setMessages((prev) => [...prev, uiMsg])
   }
 
   const handleSend = async () => {
     if (!input.trim() || loading) return
+
     const text = input.trim()
     setInput("")
     setLoading(true)
     setError(null)
     setShowEmojiPicker(false) // Close emoji picker on send
+
     try {
       await insertMessage("user", text)
+
       // بعد از ارسال پیام کاربر، منتظر جواب AI هستیم
       setIsAiTyping(true)
+
       // اگر تایمر قبلی هست، پاکش کن
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current)
       }
+
       // اگر تا مثلا 25 ثانیه جوابی نیاد، خودمون isAiTyping رو خاموش می‌کنیم
       typingTimeoutRef.current = setTimeout(() => {
         setIsAiTyping(false)
         typingTimeoutRef.current = null
       }, 25000)
+
       setTimeout(() => scrollToBottom(true), 100)
     } catch (err) {
       console.error(err)
@@ -293,10 +307,12 @@ export default function ChatClient({ companionId }: ChatClientProps) {
   const handleEmojiClick = (emoji: string) => {
     const textarea = textareaRef.current
     if (!textarea) return
+
     const start = textarea.selectionStart
     const end = textarea.selectionEnd
     const newValue = input.substring(0, start) + emoji + input.substring(end)
     setInput(newValue)
+
     // Set cursor position after emoji
     setTimeout(() => {
       textarea.focus()
@@ -310,6 +326,7 @@ export default function ChatClient({ companionId }: ChatClientProps) {
     if (touchTimeoutRef.current) {
       clearTimeout(touchTimeoutRef.current)
     }
+
     // اگر کاربر حدود 500ms نگه داشت، منو رو باز کن
     touchTimeoutRef.current = setTimeout(() => {
       setContextMenuMessageId(messageId)
@@ -326,10 +343,12 @@ export default function ChatClient({ companionId }: ChatClientProps) {
     }
   }
 
-    // Polling پیام‌ها + مدیریت isAiTyping
+  // Polling پیام‌ها + مدیریت isAiTyping
   useEffect(() => {
     if (authLoading || !userId) return
+
     let isMounted = true
+
     const interval = setInterval(async () => {
       try {
         const { data, error } = await supabase
@@ -338,18 +357,22 @@ export default function ChatClient({ companionId }: ChatClientProps) {
           .eq("user_id", userId)
           .eq("companion_id", companionId)
           .order("created_at", { ascending: true })
+
         if (error) {
           console.error("Polling messages error:", error)
           return
         }
+
         const uiMessages: UiMessage[] = (data || []).map((m: any) => ({
           id: m.id,
           role: m.sender as Role,
           content: m.text,
-          createdAt: m.created_at, // اضافه شد
+          createdAt: m.created_at,
         }))
+
         if (isMounted) {
           setMessages(uiMessages)
+
           // اگر آخرین پیام از طرف AI بود → جواب رسیده → isTyping خاموش + تایمر پاک
           if (uiMessages.length > 0) {
             const last = uiMessages[uiMessages.length - 1]
@@ -366,6 +389,7 @@ export default function ChatClient({ companionId }: ChatClientProps) {
         console.error("Polling error", e)
       }
     }, 1500)
+
     return () => {
       isMounted = false
       clearInterval(interval)
@@ -376,18 +400,16 @@ export default function ChatClient({ companionId }: ChatClientProps) {
     }
   }, [companionId, userId, authLoading])
 
-  const headerName = companion?.name || "Companion"
+
+    const headerName = companion?.name || "Companion"
   const headerAvatar = companion?.avatar || "/placeholder.svg"
 
-  const parseInterests = (interests: string | undefined): string[] => {
-    if (!interests) return []
-    try {
-      const parsed = JSON.parse(interests)
-      return Array.isArray(parsed) ? parsed : []
-    } catch {
-      return []
-    }
-  }
+  // لیست علایق از رشته‌ی interests (بر اساس کاما)
+  const interestsList =
+    companion?.interests
+      ?.split(",")
+      .map((i) => i.trim())
+      .filter((i) => i.length > 0) ?? []
 
   // --- Auth guard ---
   if (authLoading) {
@@ -397,6 +419,7 @@ export default function ChatClient({ companionId }: ChatClientProps) {
       </div>
     )
   }
+
   if (!userId) {
     return (
       <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#020617] text-[#E5E7EB]">
@@ -421,6 +444,7 @@ export default function ChatClient({ companionId }: ChatClientProps) {
         >
           ←
         </button>
+
         <button
           onClick={() => setShowAvatarInfo(true)}
           className="flex items-center gap-2 flex-1 min-w-0 hover:opacity-80 transition-opacity"
@@ -430,8 +454,11 @@ export default function ChatClient({ companionId }: ChatClientProps) {
             alt={headerName}
             className="w-8 h-8 rounded-full flex-shrink-0"
           />
-          <h1 className="text-base font-semibold text-[#F9FAFB] truncate">{headerName}</h1>
+          <h1 className="text-base font-semibold text-[#F9FAFB] truncate">
+            {headerName}
+          </h1>
         </button>
+
         <button
           className="text-[#E5E7EB] hover:text-[#6366F1] transition-colors p-2 active:scale-95"
           aria-label="Search"
@@ -454,11 +481,17 @@ export default function ChatClient({ companionId }: ChatClientProps) {
       >
         <div className="max-w-md mx-auto">
           {initialLoading && (
-            <div className="text-sm text-[#6B7280] text-center mt-8">Loading chat...</div>
+            <div className="text-sm text-[#6B7280] text-center mt-8">
+              Loading chat...
+            </div>
           )}
+
           {error && (
-            <div className="text-sm text-red-400 text-center mt-4">{error}</div>
+            <div className="text-sm text-red-400 text-center mt-4">
+              {error}
+            </div>
           )}
+
           {!initialLoading && messages.length === 0 && !error && (
             <div className="flex items-center justify-center h-[50vh]">
               <p className="text-[#6B7280] text-sm text-center">
@@ -489,7 +522,11 @@ export default function ChatClient({ companionId }: ChatClientProps) {
               return (
                 <div
                   key={message.id}
-                  className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                  className={`flex ${
+                    message.role === "user"
+                      ? "justify-end"
+                      : "justify-start"
+                  }`}
                   onContextMenu={handleContextMenu} // لپ‌تاپ / دسکتاپ
                   onTouchStart={() => handleTouchStartMessage(message.id)} // موبایل long-press
                   onTouchEnd={handleTouchEndMessage}
@@ -562,12 +599,15 @@ export default function ChatClient({ companionId }: ChatClientProps) {
           <button
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             className={`p-2 rounded-xl transition-colors flex-shrink-0 ${
-              showEmojiPicker ? "text-[#6366F1] bg-[#6366F1]/10" : "text-[#E5E7EB] hover:text-[#6366F1]"
+              showEmojiPicker
+                ? "text-[#6366F1] bg-[#6366F1]/10"
+                : "text-[#E5E7EB] hover:text-[#6366F1]"
             }`}
             aria-label="Toggle emoji picker"
           >
             <Smile className="w-5 h-5" />
           </button>
+
           <textarea
             ref={textareaRef}
             value={input}
@@ -581,6 +621,7 @@ export default function ChatClient({ companionId }: ChatClientProps) {
               maxHeight: "96px",
             }}
           />
+
           <button
             onClick={handleSend}
             disabled={loading}
@@ -591,59 +632,65 @@ export default function ChatClient({ companionId }: ChatClientProps) {
           </button>
         </div>
       </div>
-{showAvatarInfo && (
-  <div className="fixed inset-0 z-50 flex items-end justify-center">
-    {/* بک‌دراپ تار کننده پشت پنجره */}
-    <div
-      className="absolute inset-0 bg-black/50"
-      onClick={() => setShowAvatarInfo(false)}
-    />
 
-    {/* خود پنجره (bottom sheet) */}
-    <div className="relative bg-[#020617] rounded-t-3xl w-full max-w-md p-6 shadow-[0_-4px_16px_rgba(15,23,42,0.7)] animate-slide-up border-t border-[#1F2937]">
-      {/* هندل بالای شیت (خط خاکستری) */}
-      <div className="w-12 h-1 bg-[#374151] rounded-full mx-auto mb-6" />
+      {/* پنجره اطلاعات آواتار */}
+      {showAvatarInfo && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center">
+          {/* بک‌دراپ تار کننده پشت پنجره */}
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowAvatarInfo(false)}
+          />
 
-      {/* دکمه بستن */}
-      <button
-        onClick={() => setShowAvatarInfo(false)}
-        className="absolute top-4 right-4 text-[#E5E7EB] hover:text-[#F9FAFB] transition-colors"
-        aria-label="Close"
-      >
-        <X className="w-5 h-5" />
-      </button>
+          {/* خود پنجره (bottom sheet) */}
+          <div className="relative bg-[#020617] rounded-t-3xl w-full max-w-md p-6 shadow-[0_-4px_16px_rgba(15,23,42,0.7)] animate-slide-up border-t border-[#1F2937]">
+            {/* هندل بالای شیت (خط خاکستری) */}
+            <div className="w-12 h-1 bg-[#374151] rounded-full mx-auto mb-6" />
 
-      <div className="flex flex-col items-center text-center space-y-4">
-        {/* آواتار – کمی بزرگ‌تر */}
-        <img
-          src={headerAvatar || "/placeholder.svg"}
-          alt={headerName}
-          className="w-28 h-28 rounded-xl object-cover"
-        />
+            {/* دکمه بستن */}
+            <button
+              onClick={() => setShowAvatarInfo(false)}
+              className="absolute top-4 right-4 text-[#E5E7EB] hover:text-[#F9FAFB] transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
 
-        {/* اسم آواتار */}
-        <h2 className="text-xl font-bold text-[#F9FAFB]">{headerName}</h2>
+            <div className="flex flex-col items-center text-center space-y-4">
+              {/* آواتار – کمی بزرگ‌تر */}
+              <img
+                src={headerAvatar || "/placeholder.svg"}
+                alt={headerName}
+                className="w-28 h-28 rounded-xl object-cover"
+              />
 
-        {/* توضیحات (description) */}
-        <p className="text-sm text-[#E5E7EB] leading-relaxed">
-          {companion?.description || "An AI companion ready to chat with you."}
-        </p>
+              {/* اسم آواتار */}
+              <h2 className="text-xl font-bold text-[#F9FAFB]">
+                {headerName}
+              </h2>
 
-        {/* بخش Interests (فقط اگر چیزی از دیتابیس اومده باشه) */}
-        {companion?.interests && parseInterests(companion.interests).length > 0 && (
-          <div className="w-full mt-2 text-left space-y-1">
-            <p className="text-xs font-semibold uppercase tracking-wide text-[#9CA3AF]">
-              Interests:
-            </p>
-            <p className="text-sm text-[#E5E7EB] leading-relaxed">
-              {parseInterests(companion.interests).join(", ")}
-            </p>
+              {/* توضیحات (description) */}
+              <p className="text-sm text-[#E5E7EB] leading-relaxed">
+                {companion?.description ||
+                  "An AI companion ready to chat with you."}
+              </p>
+
+              {/* بخش Interests */}
+              {interestsList.length > 0 && (
+                <div className="w-full mt-2 text-left space-y-1">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[#9CA3AF]">
+                    Interests:
+                  </p>
+                  <p className="text-sm text-[#E5E7EB] leading-relaxed">
+                    {interestsList.join(", ")}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </div>
-    </div>
-  </div>
-)}
+        </div>
+      )}
+
       {/* Context Menu برای پیام‌ها */}
       {contextMenuMessageId && (
         <>
@@ -677,7 +724,9 @@ export default function ChatClient({ companionId }: ChatClientProps) {
             <button
               className="w-full text-left px-3 py-2 hover:bg-[#1F2937]"
               onClick={() => {
-                const msg = messages.find((m) => m.id === contextMenuMessageId)
+                const msg = messages.find(
+                  (m) => m.id === contextMenuMessageId
+                )
                 if (msg) {
                   navigator.clipboard?.writeText(msg.content).catch(() => {})
                 }
@@ -690,22 +739,30 @@ export default function ChatClient({ companionId }: ChatClientProps) {
             </button>
 
             {/* گزینه‌های مخصوص پیام‌های کاربر */}
-            {messages.find((m) => m.id === contextMenuMessageId)?.role === "user" && (
+            {messages.find((m) => m.id === contextMenuMessageId)?.role ===
+              "user" && (
               <>
                 <button
                   className="w-full text-left px-3 py-2 hover:bg-[#1F2937]"
                   onClick={() => {
-                    console.log("Edit message (coming soon):", contextMenuMessageId)
+                    console.log(
+                      "Edit message (coming soon):",
+                      contextMenuMessageId,
+                    )
                     setContextMenuMessageId(null)
                     setContextMenuPosition(null)
                   }}
                 >
                   Edit (coming soon)
                 </button>
+
                 <button
                   className="w-full text-left px-3 py-2 hover:bg-[#1F2937] text-red-400"
                   onClick={() => {
-                    console.log("Delete message (coming soon):", contextMenuMessageId)
+                    console.log(
+                      "Delete message (coming soon):",
+                      contextMenuMessageId,
+                    )
                     setContextMenuMessageId(null)
                     setContextMenuPosition(null)
                   }}
