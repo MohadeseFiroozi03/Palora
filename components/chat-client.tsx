@@ -811,3 +811,5 @@ export default function ChatClient({ companionId }: ChatClientProps) {
     </div>
   )
 }
+
+// hiii
