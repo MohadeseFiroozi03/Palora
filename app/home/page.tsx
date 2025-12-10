@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react"
 import Navigation from "@/components/navigation"
 import HomeClient from "@/components/home-client"
+// test deploy
+
 
 type Companion = {
   id: string
