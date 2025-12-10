@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react"
 import Navigation from "@/components/navigation"
 import HomeClient from "@/components/home-client"
-// test deploy new
 
+// test deploy new
 
 type Companion = {
   id: string
@@ -33,7 +33,6 @@ export default function HomeScreen() {
         }
 
         const url = `${SUPABASE_URL}/rest/v1/companions?select=id,name,description,image_url,interests`
-
         const res = await fetch(url, {
           headers: {
             apikey: SUPABASE_ANON_KEY,
@@ -62,27 +61,49 @@ export default function HomeScreen() {
     }
   }, [SUPABASE_URL, SUPABASE_ANON_KEY])
 
-  if (loading)
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#020617]">
-        <div className="text-sm text-[#9CA3AF]">Loading...</div>
+        <div className="flex flex-col items-center gap-3 text-[#9CA3AF] text-sm">
+          <div className="w-7 h-7 border-2 border-[#4B5563] border-t-[#6366F1] rounded-full animate-spin" />
+          <span>Loading companions...</span>
+        </div>
       </div>
     )
+  }
 
   return (
     <div className="min-h-screen pb-20 bg-[#020617]">
-      <div className="max-w-md mx-auto px-4 py-6">
-        <h1 className="text-xl md:text-2xl font-bold mb-6 text-[#F9FAFB] text-center">
-          Choose your AI companion
-        </h1>
+      {/* Header / Title */}
+      <div className="border-b border-[#111827] bg-gradient-to-b from-[#020617] via-[#020617] to-transparent">
+        <div className="max-w-md mx-auto px-4 py-6">
+          <div className="text-center space-y-2">
+            <p className="text-xs font-semibold tracking-[0.25em] text-[#6B7280] uppercase">
+              your space
+            </p>
+            <h1 className="text-2xl md:text-3xl font-bold text-[#F9FAFB]">
+              Choose your AI companion
+            </h1>
+            <p className="text-sm text-[#9CA3AF]">
+              Pick who you feel like talking to today. You can switch anytime.
+            </p>
+          </div>
+        </div>
+      </div>
 
+      {/* Content */}
+      <div className="max-w-md mx-auto px-4 pt-4 pb-6">
         {error ? (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mb-4 text-center text-sm">
-            Error loading companions: {error}
+          <div className="bg-red-500/10 border border-red-500/25 text-red-300 px-4 py-3 rounded-xl mb-4 text-center text-sm shadow-[0_8px_30px_rgba(15,23,42,0.8)]">
+            <p className="font-medium mb-1">Error loading companions</p>
+            <p className="text-xs opacity-80">{error}</p>
           </div>
         ) : companions.length === 0 ? (
-          <div className="bg-[#0B1120] px-6 py-8 rounded-xl text-center shadow-lg">
-            <p className="text-[#9CA3AF] text-sm">No companions found</p>
+          <div className="bg-[#020617] border border-dashed border-[#374151] px-6 py-8 rounded-2xl text-center shadow-[0_18px_60px_rgba(15,23,42,0.9)]">
+            <p className="text-[#9CA3AF] text-sm mb-1">No companions found</p>
+            <p className="text-[#6B7280] text-xs">
+              Check your Supabase data, then refresh this page.
+            </p>
           </div>
         ) : (
           <HomeClient companions={companions} />
@@ -93,4 +114,3 @@ export default function HomeScreen() {
     </div>
   )
 }
-
