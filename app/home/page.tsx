@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Navigation from "@/components/navigation"
 import HomeClient from "@/components/home-client"
-// test deploy
+// test deploy new
 
 
 type Companion = {
