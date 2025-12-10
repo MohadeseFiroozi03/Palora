@@ -591,42 +591,59 @@ export default function ChatClient({ companionId }: ChatClientProps) {
           </button>
         </div>
       </div>
+{showAvatarInfo && (
+  <div className="fixed inset-0 z-50 flex items-end justify-center">
+    {/* بک‌دراپ تار کننده پشت پنجره */}
+    <div
+      className="absolute inset-0 bg-black/50"
+      onClick={() => setShowAvatarInfo(false)}
+    />
 
-      {showAvatarInfo && (
-        <div className="fixed inset-0 z-50 flex items=end justify-center">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setShowAvatarInfo(false)} />
-          <div className="relative bg-[#020617] rounded-t-3xl w-full max-w-md p-6 shadow-[0_-4px_16px_rgba(15,23,42,0.7)] animate-slide-up border-t border-[#1F2937]">
-            <div className="w-12 h-1 bg-[#374151] rounded-full mx-auto mb-6" />
-            <button
-              onClick={() => setShowAvatarInfo(false)}
-              className="absolute top-4 right-4 text-[#E5E7EB] hover:text-[#F9FAFB] transition-colors"
-              aria-label="Close"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <div className="flex flex-col items-center text-center space-y-4">
-              <img src={headerAvatar || "/placeholder.svg"} alt={headerName} className="w-24 h-24 rounded-xl" />
-              <h2 className="text-xl font-bold text-[#F9FAFB]">{headerName}</h2>
-              {companion?.interests && parseInterests(companion.interests).length > 0 && (
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {parseInterests(companion.interests).map((interest, idx) => (
-                    <span
-                      key={idx}
-                      className="px-3 py-1 text-xs rounded-lg bg-[rgba(99,102,241,0.15)] text-[#E5E7EB]"
-                    >
-                      {interest}
-                    </span>
-                  ))}
-                </div>
-              )}
-              <p className="text-sm text-[#E5E7EB] leading-relaxed">
-                {companion?.description || "An AI companion ready to chat with you."}
-              </p>
-            </div>
+    {/* خود پنجره (bottom sheet) */}
+    <div className="relative bg-[#020617] rounded-t-3xl w-full max-w-md p-6 shadow-[0_-4px_16px_rgba(15,23,42,0.7)] animate-slide-up border-t border-[#1F2937]">
+      {/* هندل بالای شیت (خط خاکستری) */}
+      <div className="w-12 h-1 bg-[#374151] rounded-full mx-auto mb-6" />
+
+      {/* دکمه بستن */}
+      <button
+        onClick={() => setShowAvatarInfo(false)}
+        className="absolute top-4 right-4 text-[#E5E7EB] hover:text-[#F9FAFB] transition-colors"
+        aria-label="Close"
+      >
+        <X className="w-5 h-5" />
+      </button>
+
+      <div className="flex flex-col items-center text-center space-y-4">
+        {/* آواتار – کمی بزرگ‌تر */}
+        <img
+          src={headerAvatar || "/placeholder.svg"}
+          alt={headerName}
+          className="w-28 h-28 rounded-xl object-cover"
+        />
+
+        {/* اسم آواتار */}
+        <h2 className="text-xl font-bold text-[#F9FAFB]">{headerName}</h2>
+
+        {/* توضیحات (description) */}
+        <p className="text-sm text-[#E5E7EB] leading-relaxed">
+          {companion?.description || "An AI companion ready to chat with you."}
+        </p>
+
+        {/* بخش Interests (فقط اگر چیزی از دیتابیس اومده باشه) */}
+        {companion?.interests && parseInterests(companion.interests).length > 0 && (
+          <div className="w-full mt-2 text-left space-y-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[#9CA3AF]">
+              Interests:
+            </p>
+            <p className="text-sm text-[#E5E7EB] leading-relaxed">
+              {parseInterests(companion.interests).join(", ")}
+            </p>
           </div>
-        </div>
-      )}
-
+        )}
+      </div>
+    </div>
+  </div>
+)}
       {/* Context Menu برای پیام‌ها */}
       {contextMenuMessageId && (
         <>
