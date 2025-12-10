@@ -3,7 +3,15 @@
 import type React from "react"
 import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { Search, MoreVertical, ChevronDown, X, Smile } from "lucide-react"
+import {
+  Search,
+  MoreVertical,
+  ChevronDown,
+  X,
+  Smile,
+  ArrowLeft,
+  MessageCircle,
+} from "lucide-react"
 import Navigation from "@/components/navigation"
 import { supabase } from "@/lib/supabase"
 import { useSupabaseAuth } from "../app/hooks/useSupabaseAuth"
@@ -435,53 +443,67 @@ export default function ChatClient({ companionId }: ChatClientProps) {
   }
 
   return (
-    <div className="fixed inset-0 flex flex-col bg-[#020617]">
-      <div className="bg-[#020617] px-4 py-3 flex items-center gap-3 border-b border-[#1F2937]">
-        <button
-          onClick={() => router.push("/home")}
-          className="text-[#F9FAFB] text-xl hover:text-[#6366F1] transition-colors active:scale-95"
-          aria-label="Back"
-        >
-          ←
-        </button>
+    <div className="fixed inset-0 flex flex-col bg-[#020617] bg-gradient-to-b from-slate-950 via-slate-950/80 to-[#030712] text-slate-100">
+      <div className="sticky top-0 z-30 bg-slate-950/70 backdrop-blur-xl border-b border-slate-800/80 shadow-[0_12px_40px_-28px_rgba(0,0,0,0.7)]">
+        <div className="max-w-md w-full mx-auto px-4 py-3 flex items-center gap-3">
+          <button
+            onClick={() => router.push("/home")}
+            className="h-10 w-10 rounded-full border border-slate-800/80 bg-slate-900/70 text-slate-100 flex items-center justify-center hover:border-slate-700 hover:bg-slate-800/80 transition-all active:scale-95 shadow-sm"
+            aria-label="Back"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
 
-        <button
-          onClick={() => setShowAvatarInfo(true)}
-          className="flex items-center gap-2 flex-1 min-w-0 hover:opacity-80 transition-opacity"
-        >
-          <img
-            src={headerAvatar || "/placeholder.svg"}
-            alt={headerName}
-            className="w-8 h-8 rounded-full flex-shrink-0"
-          />
-          <h1 className="text-base font-semibold text-[#F9FAFB] truncate">
-            {headerName}
-          </h1>
-        </button>
+          <button
+            onClick={() => setShowAvatarInfo(true)}
+            className="flex items-center gap-3 flex-1 min-w-0 hover:opacity-90 transition-all text-left"
+          >
+            <div className="relative">
+              <img
+                src={headerAvatar || "/placeholder.svg"}
+                alt={headerName}
+                className="w-12 h-12 rounded-2xl border border-slate-800/70 shadow-lg shadow-indigo-900/40 object-cover"
+              />
+              <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-slate-950 bg-emerald-400 shadow-[0_0_0_3px_rgba(2,6,23,0.7)]" />
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-base font-semibold text-slate-50 truncate">
+                {headerName}
+              </h1>
+              <p className="text-[11px] text-slate-400 truncate">
+                AI companion · Always here for you
+              </p>
+            </div>
+          </button>
 
-        <button
-          className="text-[#E5E7EB] hover:text-[#6366F1] transition-colors p-2 active:scale-95"
-          aria-label="Search"
-        >
-          <Search className="w-5 h-5" />
-        </button>
-        <button
-          className="text-[#E5E7EB] hover:text-[#6366F1] transition-colors p-2 active:scale-95"
-          aria-label="More options"
-        >
-          <MoreVertical className="w-5 h-5" />
-        </button>
+          <div className="flex items-center gap-2">
+            <button
+              className="h-10 w-10 rounded-full border border-slate-800/80 bg-slate-900/70 text-slate-200 hover:text-white hover:border-slate-700 hover:bg-slate-800/80 transition-all active:scale-95 flex items-center justify-center shadow-sm"
+              aria-label="Search"
+            >
+              <Search className="w-5 h-5" />
+            </button>
+            <button
+              className="h-10 w-10 rounded-full border border-slate-800/80 bg-slate-900/70 text-slate-200 hover:text-white hover:border-slate-700 hover:bg-slate-800/80 transition-all active:scale-95 flex items-center justify-center shadow-sm"
+              aria-label="More options"
+            >
+              <MoreVertical className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
       </div>
 
       <div
         ref={messagesContainerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto px-4 py-4"
+        className="flex-1 overflow-y-auto px-4 py-6 relative"
         style={{ paddingBottom: showEmojiPicker ? "300px" : "150px" }}
       >
-        <div className="max-w-md mx-auto">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.08),transparent_35%)] blur-3xl" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_10%,rgba(56,189,248,0.05),transparent_35%)] blur-3xl" />
+        <div className="max-w-md mx-auto relative">
           {initialLoading && (
-            <div className="text-sm text-[#6B7280] text-center mt-8">
+            <div className="text-sm text-[#9CA3AF] text-center mt-8">
               Loading chat...
             </div>
           )}
@@ -493,14 +515,18 @@ export default function ChatClient({ companionId }: ChatClientProps) {
           )}
 
           {!initialLoading && messages.length === 0 && !error && (
-            <div className="flex items-center justify-center h-[50vh]">
-              <p className="text-[#6B7280] text-sm text-center">
-                No messages yet. Start the conversation!
+            <div className="flex flex-col items-center justify-center h-[50vh] text-center space-y-3">
+              <div className="h-14 w-14 rounded-2xl bg-slate-900/70 border border-slate-800/70 flex items-center justify-center shadow-inner shadow-indigo-900/40">
+                <MessageCircle className="w-7 h-7 text-indigo-300" />
+              </div>
+              <p className="text-base text-slate-200">No messages yet</p>
+              <p className="text-xs text-slate-400">
+                Say hello to start the conversation.
               </p>
             </div>
           )}
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             {messages.map((message) => {
               // فرمت ساده‌ی زمان: HH:MM
               let timeLabel = ""
@@ -533,15 +559,17 @@ export default function ChatClient({ companionId }: ChatClientProps) {
                   onTouchCancel={handleTouchEndMessage}
                 >
                   <div
-                    className={`max-w-[75%] px-4 py-2.5 rounded-[14px] text-sm leading-relaxed ${
+                    className={`group max-w-[78%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-lg border ${
                       message.role === "user"
-                        ? "bg-[#4C1D95] text-[#E5E7EB]" // purple-900 برای کاربر
-                        : "bg-[#111827] text-[#E5E7EB]" // برای AI
+                        ? "bg-gradient-to-br from-indigo-600 via-indigo-600/90 to-indigo-700 text-slate-50 border-indigo-500/30 shadow-indigo-900/40"
+                        : "bg-slate-800/80 text-slate-100 border-slate-700/60 shadow-black/30 backdrop-blur-sm"
                     }`}
                   >
-                    <div>{message.content}</div>
+                    <div className="whitespace-pre-wrap break-words">
+                      {message.content}
+                    </div>
                     {timeLabel && (
-                      <div className="mt-1 text-[10px] text-[#9CA3AF] text-right">
+                      <div className="mt-2 text-[10px] text-slate-400/90 text-right">
                         {timeLabel}
                       </div>
                     )}
@@ -553,10 +581,11 @@ export default function ChatClient({ companionId }: ChatClientProps) {
             {/* AI is typing indicator */}
             {isAiTyping && (
               <div className="flex justify-start">
-                <div className="max-w-[50%] px-3 py-2 rounded-[14px] bg-[#111827] text-[#9CA3AF] text-xs flex gap-1">
-                  <span className="animate-pulse">●</span>
-                  <span className="animate-pulse delay-150">●</span>
-                  <span className="animate-pulse delay-300">●</span>
+                <div className="max-w-[55%] px-4 py-2.5 rounded-2xl bg-slate-800/80 border border-slate-700/60 text-[#cbd5e1] text-xs flex items-center gap-2 shadow-lg shadow-black/30">
+                  <span className="h-1.5 w-1.5 rounded-full bg-slate-200 animate-pulse" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-slate-200 animate-pulse delay-150" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-slate-200 animate-pulse delay-300" />
+                  <span className="text-[11px] text-slate-400">Typing...</span>
                 </div>
               </div>
             )}
@@ -569,7 +598,7 @@ export default function ChatClient({ companionId }: ChatClientProps) {
       {showScrollButton && (
         <button
           onClick={() => scrollToBottom(true)}
-          className="fixed bottom-36 right-6 bg-[#111827] text-[#E5E7EB] p-3 rounded-full shadow-lg hover:bg-[#1F2937] active:scale-95 transition-all z-20"
+          className="fixed bottom-32 right-6 h-11 w-11 bg-gradient-to-br from-indigo-600 to-indigo-500 text-white flex items-center justify-center rounded-full shadow-lg shadow-indigo-900/50 border border-indigo-400/30 hover:-translate-y-0.5 active:scale-95 transition-all z-20"
           aria-label="Scroll to latest"
         >
           <ChevronDown className="w-5 h-5" />
@@ -577,14 +606,18 @@ export default function ChatClient({ companionId }: ChatClientProps) {
       )}
 
       {showEmojiPicker && (
-        <div className="absolute bottom-28 left-0 right-0 bg-[#020617] border-t border-[#1F2937] shadow-[0_-4px_16px_rgba(15,23,42,0.7)] overflow-hidden">
-          <div className="max-w-md mx-auto p-4">
+        <div className="absolute bottom-28 left-0 right-0 bg-slate-950/90 backdrop-blur-2xl border-t border-slate-800/80 shadow-[0_-12px_40px_rgba(0,0,0,0.45)] overflow-hidden rounded-t-3xl">
+          <div className="max-w-md mx-auto p-4 space-y-3">
+            <div className="flex items-center justify-between text-xs text-slate-400 uppercase tracking-[0.14em]">
+              <span className="font-semibold text-slate-300">Reactions</span>
+              <span className="text-slate-500">Pick an emoji</span>
+            </div>
             <div className="grid grid-cols-8 gap-2">
               {EMOJIS.map((emoji, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleEmojiClick(emoji)}
-                  className="text-2xl hover:scale-125 transition-transform active:scale-110 p-2"
+                  className="text-2xl hover:scale-125 transition-transform active:scale-110 p-2 rounded-xl hover:bg-slate-800/70"
                 >
                   {emoji}
                 </button>
@@ -594,14 +627,14 @@ export default function ChatClient({ companionId }: ChatClientProps) {
         </div>
       )}
 
-      <div className="absolute bottom-14 left-0 right-0 bg-[#020617] px-4 py-3 border-t border-[#1F2937]">
-        <div className="max-w-md mx-auto flex gap-2 items-end">
+      <div className="absolute bottom-14 left-0 right-0 px-4 py-4 bg-gradient-to-t from-[#020617] via-[#020617]/95 to-transparent">
+        <div className="max-w-md mx-auto flex gap-3 items-end rounded-2xl border border-slate-800/80 bg-slate-900/70 backdrop-blur-xl px-3 py-3 shadow-2xl shadow-black/40">
           <button
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            className={`p-2 rounded-xl transition-colors flex-shrink-0 ${
+            className={`h-11 w-11 rounded-full flex items-center justify-center transition-all flex-shrink-0 border ${
               showEmojiPicker
-                ? "text-[#6366F1] bg-[#6366F1]/10"
-                : "text-[#E5E7EB] hover:text-[#6366F1]"
+                ? "text-indigo-300 bg-indigo-900/40 border-indigo-500/40 shadow-inner shadow-indigo-900/40"
+                : "text-slate-200 bg-slate-800/80 border-slate-700 hover:text-white hover:border-slate-600"
             }`}
             aria-label="Toggle emoji picker"
           >
@@ -615,7 +648,7 @@ export default function ChatClient({ companionId }: ChatClientProps) {
             onKeyDown={handleKeyDown}
             placeholder="Type a message..."
             rows={1}
-            className="flex-1 bg-[#020617] text-[#F9FAFB] placeholder:text-[#6B7280] px-4 py-2.5 rounded-xl text-sm outline-none border border-[#374151] focus:border-[#6366F1] resize-none overflow-y-auto transition-all"
+            className="flex-1 bg-transparent text-[#F9FAFB] placeholder:text-slate-500 px-4 py-2.5 rounded-2xl text-sm outline-none border border-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 resize-none overflow-y-auto transition-all"
             style={{
               minHeight: "42px",
               maxHeight: "96px",
@@ -625,8 +658,7 @@ export default function ChatClient({ companionId }: ChatClientProps) {
           <button
             onClick={handleSend}
             disabled={loading}
-            className="bg-[#6366F1] hover:bg-[#5558E3] disabled:opacity-50 active:scale-95 text-[#F9FAFB] px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex-shrink-0"
-            style={{ minHeight: "42px" }}
+            className="min-h-[42px] px-5 py-2.5 rounded-2xl text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 via-indigo-500 to-indigo-400 hover:from-indigo-500 hover:via-indigo-500 hover:to-indigo-300 disabled:opacity-60 active:scale-95 transition-all shadow-md shadow-indigo-900/40 flex-shrink-0"
           >
             {loading ? "..." : "Send"}
           </button>
