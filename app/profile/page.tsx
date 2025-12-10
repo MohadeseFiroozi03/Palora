@@ -108,9 +108,6 @@ export default function ProfileScreen() {
                   {email}
                 </p>
               </div>
-              <p className="text-xs text-[#6B7280]">
-                در آینده عکس آواتار خودت اینجا نمایش داده می‌شود.
-              </p>
             </div>
 
             {/* اطلاعات کاربر */}

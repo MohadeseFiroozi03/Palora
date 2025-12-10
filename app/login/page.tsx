@@ -44,7 +44,7 @@ export default function LoginPage() {
         {/* App title / tagline */}
         <div className="mb-6 text-center">
           <p className="text-xs font-semibold tracking-[0.25em] text-[#6B7280] uppercase">
-            companion
+            palora
           </p>
           <p className="text-sm text-[#9CA3AF] mt-1">
             Log in to keep your conversations in one place.
