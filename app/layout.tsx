@@ -36,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans antialiased`}>
+      <body className="font-sans antialiased min-h-screen bg-[#020617] text-slate-100">
         {children}
         <Analytics />
       </body>

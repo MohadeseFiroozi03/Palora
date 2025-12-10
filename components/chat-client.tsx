@@ -445,7 +445,7 @@ export default function ChatClient({ companionId }: ChatClientProps) {
   return (
     <div className="fixed inset-0 flex flex-col bg-[#020617] bg-gradient-to-b from-slate-950 via-slate-950/80 to-[#030712] text-slate-100">
       <div className="sticky top-0 z-30 bg-slate-950/70 backdrop-blur-xl border-b border-slate-800/80 shadow-[0_12px_40px_-28px_rgba(0,0,0,0.7)]">
-        <div className="max-w-md w-full mx-auto px-4 py-3 flex items-center gap-3">
+        <div className="max-w-4xl w-full mx-auto px-4 sm:px-6 md:px-8 py-3 flex items-center gap-3">
           <button
             onClick={() => router.push("/home")}
             className="h-10 w-10 rounded-full border border-slate-800/80 bg-slate-900/70 text-slate-100 flex items-center justify-center hover:border-slate-700 hover:bg-slate-800/80 transition-all active:scale-95 shadow-sm"
@@ -496,12 +496,12 @@ export default function ChatClient({ companionId }: ChatClientProps) {
       <div
         ref={messagesContainerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto px-4 py-6 relative"
+        className="flex-1 overflow-y-auto px-4 sm:px-6 md:px-8 py-6 relative"
         style={{ paddingBottom: showEmojiPicker ? "300px" : "150px" }}
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.08),transparent_35%)] blur-3xl" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_10%,rgba(56,189,248,0.05),transparent_35%)] blur-3xl" />
-        <div className="max-w-md mx-auto relative">
+        <div className="max-w-3xl mx-auto relative">
           {initialLoading && (
             <div className="text-sm text-[#9CA3AF] text-center mt-8">
               Loading chat...
@@ -559,9 +559,9 @@ export default function ChatClient({ companionId }: ChatClientProps) {
                   onTouchCancel={handleTouchEndMessage}
                 >
                   <div
-                    className={`group max-w-[78%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-lg border ${
+                    className={`group max-w-[82%] sm:max-w-[78%] md:max-w-[72%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-lg border ${
                       message.role === "user"
-                      ? "bg-gradient-to-br from-purple-600 via-purple-600/90 to-purple-700 text-slate-50 border-purple-500/40 shadow-purple-900/50"
+                        ? "bg-gradient-to-br from-purple-600 via-purple-600/90 to-purple-700 text-slate-50 border-purple-500/40 shadow-purple-900/50"
                       : "bg-slate-800/80 text-slate-100 border-slate-700/60 shadow-black/30 backdrop-blur-sm"
                     }`}
                   >
@@ -628,8 +628,8 @@ export default function ChatClient({ companionId }: ChatClientProps) {
       )}
       //hhhhh
 
-      <div className="absolute bottom-14 left-0 right-0 px-4 py-4 bg-gradient-to-t from-[#020617] via-[#020617]/95 to-transparent">
-        <div className="max-w-md mx-auto flex gap-3 items-end rounded-2xl border border-slate-800/80 bg-slate-900/70 backdrop-blur-xl px-3 py-3 shadow-2xl shadow-black/40">
+      <div className="absolute bottom-14 left-0 right-0 px-4 sm:px-6 md:px-8 py-4 bg-gradient-to-t from-[#020617] via-[#020617]/95 to-transparent">
+        <div className="max-w-3xl mx-auto flex gap-3 items-end rounded-2xl border border-slate-800/80 bg-slate-900/70 backdrop-blur-xl px-3 sm:px-4 md:px-5 py-3 shadow-2xl shadow-black/40">
           <button
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             className={`h-11 w-11 rounded-full flex items-center justify-center transition-all flex-shrink-0 border ${

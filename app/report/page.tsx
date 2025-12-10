@@ -84,20 +84,20 @@ export default function ReportScreen() {
       )}
 
       {/* هدر بالای صفحه */}
-      <div className="bg-[#020617]/80 backdrop-blur-sm px-4 py-4 border-b border-[#111827] sticky top-0 z-20">
-        <div className="max-w-md mx-auto">
-          <h1 className="text-xl font-semibold text-[#F9FAFB] text-center">
+      <div className="bg-[#020617]/80 backdrop-blur-sm px-4 sm:px-6 md:px-8 py-4 border-b border-[#111827] sticky top-0 z-20">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-xl md:text-2xl font-semibold text-[#F9FAFB] text-center">
             Send Feedback
           </h1>
-          <p className="mt-1 text-xs text-[#9CA3AF] text-center">
+          <p className="mt-1 text-xs md:text-sm text-[#9CA3AF] text-center">
             Tell us what&apos;s working well or what needs improvement.
           </p>
         </div>
       </div>
 
       {/* محتوای اصلی */}
-      <div className="flex-1 px-4 py-8 flex items-center justify-center">
-        <div className="w-full max-w-md relative">
+      <div className="flex-1 px-4 sm:px-6 md:px-8 py-8 flex items-center justify-center">
+        <div className="w-full max-w-3xl md:max-w-xl relative">
           {/* حلقه‌ی گرادیان ظریف دور کارت */}
           <div
             className="absolute -inset-[1px] rounded-2xl bg-gradient-to-br from-[#6366F1]/40 via-transparent to-[#EC4899]/40 opacity-60 blur-md"

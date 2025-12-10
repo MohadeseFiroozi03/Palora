@@ -27,7 +27,7 @@ export default function HomeClient({ companions }: { companions: Companion[] }) 
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
       {companions.map((companion) => {
         const interestsList = parseInterests(companion.interests)
         const isHovered = hoveredId === companion.id
@@ -37,7 +37,7 @@ export default function HomeClient({ companions }: { companions: Companion[] }) 
             key={companion.id}
             onMouseEnter={() => setHoveredId(companion.id)}
             onMouseLeave={() => setHoveredId(null)}
-            className={`w-[90%] mx-auto bg-[#111827] border border-[#374151] rounded-xl shadow-[0_4px_16px_rgba(15,23,42,0.7)] cursor-pointer transition-all duration-200 overflow-hidden ${
+            className={`bg-[#111827] border border-[#374151] rounded-xl shadow-[0_4px_16px_rgba(15,23,42,0.7)] cursor-pointer transition-all duration-200 overflow-hidden ${
               isHovered ? "scale-[1.02] shadow-[0_8px_24px_rgba(15,23,42,0.9)] border-[#6366F1]/50" : ""
             }`}
           >

@@ -60,8 +60,8 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 bg-[#020617]">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center px-6 sm:px-8 md:px-10 bg-[#020617]">
+      <div className="w-full max-w-md sm:max-w-lg md:max-w-xl">
         {/* عنوان و توضیح کوتاه */}
         <div className="mb-6 text-center">
           <p className="text-xs font-semibold tracking-[0.25em] text-[#6B7280] uppercase">

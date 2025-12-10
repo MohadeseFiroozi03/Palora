@@ -73,18 +73,18 @@ export default function HomeScreen() {
   }
 
   return (
-    <div className="min-h-screen pb-20 bg-[#020617]">
+    <div className="min-h-screen pb-24 bg-[#020617]">
       {/* Header / Title */}
       <div className="border-b border-[#111827] bg-gradient-to-b from-[#020617] via-[#020617] to-transparent">
-        <div className="max-w-md mx-auto px-4 py-6">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8">
           <div className="text-center space-y-2">
             <p className="text-xs font-semibold tracking-[0.25em] text-[#6B7280] uppercase">
               your space
             </p>
-            <h1 className="text-2xl md:text-3xl font-bold text-[#F9FAFB]">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#F9FAFB]">
               Choose your AI companion
             </h1>
-            <p className="text-sm text-[#9CA3AF]">
+            <p className="text-sm md:text-base text-[#9CA3AF] max-w-2xl mx-auto">
               Pick who you feel like talking to today. You can switch anytime.
             </p>
           </div>
@@ -92,7 +92,7 @@ export default function HomeScreen() {
       </div>
 
       {/* Content */}
-      <div className="max-w-md mx-auto px-4 pt-4 pb-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 pt-4 pb-10">
         {error ? (
           <div className="bg-red-500/10 border border-red-500/25 text-red-300 px-4 py-3 rounded-xl mb-4 text-center text-sm shadow-[0_8px_30px_rgba(15,23,42,0.8)]">
             <p className="font-medium mb-1">Error loading companions</p>

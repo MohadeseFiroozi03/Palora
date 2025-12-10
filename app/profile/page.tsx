@@ -60,15 +60,15 @@ export default function ProfileScreen() {
   const email = user?.email || "unknown@example.com"
 
   return (
-    <div className="min-h-screen pb-20 bg-[#020617]">
+    <div className="min-h-screen pb-24 bg-[#020617]">
       {/* Header */}
-      <div className="bg-[#020617] px-4 py-4 border-b border-[#1F2937]">
-        <h1 className="text-xl font-bold text-[#F9FAFB] text-center">
+      <div className="bg-[#020617] px-4 sm:px-6 md:px-8 py-4 border-b border-[#1F2937]">
+        <h1 className="text-xl md:text-2xl font-bold text-[#F9FAFB] text-center">
           Profile
         </h1>
       </div>
 
-      <div className="px-4 py-8 max-w-md mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="px-4 sm:px-6 md:px-8 py-8 max-w-2xl mx-auto flex items-center justify-center min-h-[60vh]">
         {/* حالت لودینگ */}
         {loading && (
           <div className="flex flex-col items-center gap-3 text-[#9CA3AF] text-sm">

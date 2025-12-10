@@ -16,12 +16,16 @@ export default async function ChatScreen({ params }: ChatPageProps) {
   console.log("ChatScreen id:", id);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#111", color: "white" }}>
-      <div style={{ padding: 16, borderBottom: "1px solid #444" }}>
-        <h1>DEBUG /chat/[id]</h1>
-        <pre>{JSON.stringify({ id }, null, 2)}</pre>
+    <div className="min-h-screen bg-[#020617] text-white flex flex-col">
+      <div className="px-4 sm:px-6 md:px-8 py-3 border-b border-[#1F2937] text-xs sm:text-sm">
+        <div className="max-w-5xl mx-auto w-full">
+          <h1 className="font-semibold">DEBUG /chat/[id]</h1>
+          <pre className="mt-1 opacity-70">{JSON.stringify({ id }, null, 2)}</pre>
+        </div>
       </div>
-      <ChatClient companionId={id} />
+      <div className="flex-1 min-h-0">
+        <ChatClient companionId={id} />
+      </div>
     </div>
   );
 }

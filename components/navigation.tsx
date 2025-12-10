@@ -14,8 +14,8 @@ export default function Navigation() {
   ]
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 h-14 bg-[#020617] border-t border-[#1F2937]">
-      <div className="flex justify-around items-center h-full">
+    <nav className="fixed bottom-0 left-0 right-0 h-14 md:h-16 bg-[#020617]/95 backdrop-blur-md border-t border-[#1F2937]">
+      <div className="mx-auto w-full max-w-5xl px-3 sm:px-6 md:px-8 flex justify-between sm:justify-around items-center h-full">
         {links.map(({ href, label, Icon }) => {
           const isActive = pathname === href || pathname?.startsWith(href + "/")
 
@@ -23,7 +23,7 @@ export default function Navigation() {
             <button
               key={href}
               onClick={() => router.push(href)}
-              className={`flex flex-col items-center justify-center gap-1 px-6 h-full transition-colors ${
+              className={`flex flex-col items-center justify-center gap-1 px-4 sm:px-6 h-full transition-colors ${
                 isActive ? "text-[#6366F1]" : "text-[#9CA3AF] hover:text-[#E5E7EB]"
               }`}
             >
