@@ -626,6 +626,7 @@ export default function ChatClient({ companionId }: ChatClientProps) {
           </div>
         </div>
       )}
+      //hhhhh
 
       <div className="absolute bottom-14 left-0 right-0 px-4 py-4 bg-gradient-to-t from-[#020617] via-[#020617]/95 to-transparent">
         <div className="max-w-md mx-auto flex gap-3 items-end rounded-2xl border border-slate-800/80 bg-slate-900/70 backdrop-blur-xl px-3 py-3 shadow-2xl shadow-black/40">
