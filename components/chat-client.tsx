@@ -561,8 +561,8 @@ export default function ChatClient({ companionId }: ChatClientProps) {
                   <div
                     className={`group max-w-[78%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-lg border ${
                       message.role === "user"
-                        ? "bg-gradient-to-br from-indigo-600 via-indigo-600/90 to-indigo-700 text-slate-50 border-indigo-500/30 shadow-indigo-900/40"
-                        : "bg-slate-800/80 text-slate-100 border-slate-700/60 shadow-black/30 backdrop-blur-sm"
+                      ? "bg-gradient-to-br from-purple-500 via-purple-500/90 to-purple-600 text-slate-50 border-purple-400/40 shadow-purple-900/40"
+                      : "bg-slate-800/80 text-slate-100 border-slate-700/60 shadow-black/30 backdrop-blur-sm"
                     }`}
                   >
                     <div className="whitespace-pre-wrap break-words">
@@ -812,4 +812,3 @@ export default function ChatClient({ companionId }: ChatClientProps) {
   )
 }
 
-// hiii
