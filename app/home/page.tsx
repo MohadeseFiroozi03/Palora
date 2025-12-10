@@ -94,6 +94,7 @@
 
 
 
+// app/home/page.tsx
 "use client"
 
 import { useEffect, useState } from "react"
@@ -163,34 +164,25 @@ export default function HomeScreen() {
     )
 
   return (
-    <div className="min-h-screen bg-[#020617] flex flex-col">
-      {/* محتوای اصلی */}
-      <main className="flex-1 flex justify-center pb-20">
-        <div className="w-full max-w-md md:max-w-4xl px-4 py-6">
-          <h1 className="text-2xl md:text-3xl font-bold mb-6 text-[#F9FAFB] text-center md:text-left">
-            Choose your AI companion
-          </h1>
+    <div className="min-h-screen pb-20 bg-[#020617]">
+      <div className="max-w-md mx-auto px-4 py-6">
+        <h1 className="text-xl md:text-2xl font-bold mb-6 text-[#F9FAFB] text-center">
+          Choose your AI companion
+        </h1>
 
-          <div className="md:grid md:grid-cols-2 md:gap-6">
-            {error ? (
-              <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mb-4 text-center text-sm md:col-span-2">
-                Error loading companions: {error}
-              </div>
-            ) : companions.length === 0 ? (
-              <div className="bg-[#0B1120] px-6 py-8 rounded-xl text-center shadow-lg md:col-span-2">
-                <p className="text-[#9CA3AF] text-sm">No companions found</p>
-              </div>
-            ) : (
-              // HomeClient خودش می‌تونه لیست رو موبایل‌فرندلی رندر کنه
-              <div className="md:col-span-2">
-                <HomeClient companions={companions} />
-              </div>
-            )}
+        {error ? (
+          <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mb-4 text-center text-sm">
+            Error loading companions: {error}
           </div>
-        </div>
-      </main>
+        ) : companions.length === 0 ? (
+          <div className="bg-[#0B1120] px-6 py-8 rounded-xl text-center shadow-lg">
+            <p className="text-[#9CA3AF] text-sm">No companions found</p>
+          </div>
+        ) : (
+          <HomeClient companions={companions} />
+        )}
+      </div>
 
-      {/* ناوبری پایین (مثلاً bottom nav) */}
       <Navigation />
     </div>
   )
